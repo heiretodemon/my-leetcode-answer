@@ -1,0 +1,49 @@
+You're given strings J representing the types of stones that are jewels, and S representing the stones you have.  Each character in S is a type of stone you have.  You want to know how many of the stones you have are also jewels.
+
+The letters in J are guaranteed distinct, and all characters in J and S are letters. Letters are case sensitive, so "a" is considered a different type of stone from "A".
+
+Example 1:
+Input: J = "aA", S = "aAAbbbb"
+Output: 3
+Example 2:
+
+Input: J = "z", S = "ZZ"
+Output: 0
+
+Note:
+S and J will consist of letters and have length at most 50.
+The characters in J are distinct.
+
+Code:
+int numJewelsInStones(char *J, char *S) {
+    int i=strlen(J);//sizeof is wrong.
+    int j=strlen(S);
+    int count=0;
+    for(int m=0;m<i;m++)
+        for (int n=0;n<j;n++)
+            if(J[m]==S[n])
+                count++;
+    return count;     
+}
+
+注：
+    sizeof 和strlen 有本质上的区别。sizeof 是C 语言的一种单目运算符，如++、--等，并不是函数，sizeof 的优先级为2 级，比/、% 等3 级运算符优先级高，sizeof以字节的形式给出操作数的存储空间的大小。而 strlen 是一个函数，是由 C 语言的标准库提供的。strlen 计算的  是字符串的长度。 
+    strlen 的应用则不像 sizeof 那么广泛，strlen 的参数必须是char * 的指针，如果用strlen 计算数据类型 strlen（int）这种用法是错误的。strlen 的计算必须依赖字符序列中的’\0’ 字符，strlen  就是通过判断是否遇到’\0’ 来判断字符序列是否结束的。 
+    strlen 的用法：分为以下几种参数 
+ 
+（1）char *  指针 
+         
+strlen（指针名） 
+ 
+如果参数是指针则计算该指针指向字符序列的长度。（以’\0’ 作为判断标志）例如： 
+ 
+定义char *p=“hello world”；strlen（p）=11，而 sizeof  （p）=4。可以看到 strlen
+计算的是指针指向的字符串的长度而sizeof 计算的是指针本身所占用的内存空
+间的大小。 
+ 
+（2）数组 
+ 
+strlen（数组名） 
+ 
+如果参数是数组的话，实际传递的是一个指针，strlen 会按照上面处理指针的模
+式处理该数组。 
