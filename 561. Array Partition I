@@ -1,0 +1,129 @@
+Given an array of 2n integers, your task is to group these integers into n pairs of integer, say (a1, b1), (a2, b2), ..., (an, bn) which 
+makes sum of min(ai, bi) for all i from 1 to n as large as possible.
+
+Example 1:
+Input: [1,4,3,2]
+
+Output: 4
+Explanation: n is 2, and the maximum sum of pairs is 4 = min(1, 2) + min(3, 4).
+
+Note:
+1.n is a positive integer, which is in the range of [1, 10000].
+2.All the integers in the array will be in the range of [-10000, 10000].
+
+answer 1:insertion sort
+
+int arrayPairSum(int* nums, int numsSize) {
+    int sum=0,j,temp;
+    for(int i=0;i<numsSize;i++)
+    {
+        temp=nums[i];
+        for(j=i;j>0&&nums[j-1]>temp;j--)
+            nums[j]=nums[j-1];
+        nums[j]=temp;
+    }
+    for(int k=0;k<numsSize;k+=2)
+        sum+=nums[k];
+    return sum;
+}
+
+answer 2:(quick sort which chooses the first number as pivot)
+
+void swap(int *x,int *y){
+    int temp=*x;
+    *x=*y;
+    *y=temp;
+}
+
+int partition(int *nums, int left, int right){
+    int pivot=nums[left];
+    int pos=left;//record final pivot position;
+    for(int i=left+1;i<=right;i++){
+        if(nums[i]<pivot){
+            pos++;
+            swap(&nums[pos],&nums[i]);//move integer which is smaller than pivot to the left side
+        }
+    }
+    swap(&nums[pos],&nums[left]);//move pivot to final position
+    return pos;
+}
+
+void quickSort(int *nums, int left, int right){
+    if(left>right)
+        return ;
+    int pivotPos=partition(nums,left,right);
+    
+    quickSort(nums,left,pivotPos-1);
+    quickSort(nums,pivotPos+1,right);
+}
+
+int arrayPairSum(int* nums, int numsSize) {
+    quickSort(nums,0,numsSize-1);
+    int sum=0;
+    for (int i=0;i<numsSize;i+=2)
+        sum+=nums[i];
+    return sum;
+}
+
+
+
+answer 3:quick sort with median-of-three partitioning(not accepted,fixing)
+int arrayPairSum(int* nums, int numsSize) {
+    quick_insertSort(nums,0,numsSize-1);
+    int sum=0;
+    for (int i=0;i<numsSize;i+=2)
+        sum+=nums[i];
+    return sum;
+}
+
+void swap(int *x,int *y){
+    int temp=*x;
+    *x=*y;
+    *y=temp;
+}
+
+int median3(int *nums, int left, int right){
+    int center=(left+right)/2;
+    
+    if(nums[center]>nums[right])
+        swap(&nums[right],&nums[center]);
+    if(nums[left]>nums[right])
+        swap(&nums[left],&nums[right]);
+    if(nums[center]>nums[left])
+        swap(&nums[center],&nums[left]);//put pivot in the left
+    return nums[left];
+}
+
+
+void quick_insertSort(int *nums, int left, int right){
+    if(right-left+1<10){
+        insertSort(nums,left,right) ;
+        return;    
+    }
+    int pivot=median3(nums,left,right);
+    int i=left,j=right;
+    for( ; ; ){
+        while(nums[++i]<pivot){}
+        while(nums[--j]>pivot){}
+        if (i<j)
+            swap(&nums[i],&nums[j]);
+        else 
+            break;
+    }
+    swap(&nums[i],&nums[left]);//restore pivot
+    quick_insertSort(nums,left,i-1);
+    quick_insertSort(nums,i+1,right);
+}
+
+void insertSort(int *nums,int left,int right) {
+    if(left>=right)
+        return;
+    int j,temp;
+    for(int i=0;i<right-left+1;i++)
+    {
+        temp=nums[i];
+        for(j=i;j>0&&nums[j-1]>temp;j--)
+            nums[j]=nums[j-1];
+        nums[j]=temp;
+    }
+}
