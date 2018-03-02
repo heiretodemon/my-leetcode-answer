@@ -1,0 +1,30 @@
+Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list.
+
+For example,
+Given 1->2->3->3->4->4->5, return 1->2->5.
+Given 1->1->1->2->3, return 2->3.
+
+answer:
+struct ListNode* deleteDuplicates(struct ListNode* head) {
+struct ListNode *new_head = NULL;
+        struct ListNode *tail = NULL;
+        struct ListNode *pre = NULL;  
+        struct ListNode *p = head;
+    
+    while(p)
+    {
+        struct ListNode *next=p->next;
+        if((!pre||pre->val!=p->val)&&(!next||next->val!=p->val)){   //当不存在连续的两个或三个数相等时
+            if(!new_head)
+                new_head=tail=p;
+            else{
+                tail->next=p;
+                tail=p;
+            }
+            tail->next=NULL;
+        }
+        pre=p;
+        p=next;
+    }
+    return new_head;
+}
